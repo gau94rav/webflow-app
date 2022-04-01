@@ -36,6 +36,7 @@
         v-else
         type="text"
         class="px-2 py-1 border rounded border-neutral-600"
+        :value="item.default"
         @input="updateProp({ name: item.name, value: $event.target.value })"
       />
     </div>

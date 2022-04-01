@@ -4,7 +4,7 @@
     <library-sidebar-component>
       <div
         v-if="editor.isDragging"
-        class="absolute left-0 z-20 w-full h-full bg-red-400 bg-opacity-10 filter backdrop-blur-sm"
+        class="absolute left-0 z-20 w-full h-full bg-red-400 bg-opacity-10 filter backdrop-blur-sm dark:text-neutral-100"
         @dragenter="editor.setCanBeDeleted(true)"
         @dragleave="editor.setCanBeDeleted(false)"
         @dragover="handleDragRemove"
