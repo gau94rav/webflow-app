@@ -1,9 +1,7 @@
 <template>
-  <div
-    class="flex justify-between w-full transition-colors dark:bg-gray-900 dark:text-gray-100"
-  >
+  <div class="flex justify-between w-full transition-colors dark:bg-gray-900">
     <!-- Sidebar -->
-    <sidebar-component>
+    <library-sidebar-component>
       <div
         v-if="editor.isDragging"
         class="absolute left-0 z-20 w-full h-full bg-red-400 bg-opacity-10 filter backdrop-blur-sm"
@@ -27,19 +25,24 @@
         <div class="absolute top-0 left-0 z-10 w-full h-full m-auto"></div>
         <component :is="components[compName]" />
       </div>
-    </sidebar-component>
+    </library-sidebar-component>
 
     <!-- Editor -->
     <div class="w-full" @dragover="handleEditorDragover" @drop="resetDragItem">
       <editor-component></editor-component>
     </div>
+    <editor-sidebar-component
+      :key="editor.selectedComponentEditing.id"
+      v-if="editor.selectedComponentEditing.id"
+    />
   </div>
 </template>
 
 <script setup>
 import * as components from "../utils/components";
-import SidebarComponent from "../components/SidebarComponent.vue";
+import LibrarySidebarComponent from "../components/LibrarySidebarComponent.vue";
 import EditorComponent from "../components/EditorComponent.vue";
+import EditorSidebarComponent from "../components/EditorSidebarComponent.vue";
 import { Icon } from "@iconify/vue";
 import { useEditorStore } from "../stores/editor";
 
@@ -49,7 +52,7 @@ function handleDragStart(e, name) {
   editor.setSelectedComponent({
     id: guidGenerator(),
     name,
-    props: [],
+    props: {},
   });
 }
 

@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col w-full gap-1">
-    <label for="">Input</label>
+  <div class="flex flex-col w-full gap-1" :class="colors[color]">
+    <label for="">{{ label }}</label>
     <input type="text" />
   </div>
 </template>
@@ -12,4 +12,23 @@ export default {
   customOptions: {},
 };
 </script>
-<script setup></script>
+<script setup>
+const props = defineProps({
+  label: {
+    type: String,
+    default: "My Input",
+  },
+  color: {
+    type: String,
+    default: "primary",
+    options: ["primary", "secondary", "error", "neutral"],
+  },
+});
+
+const colors = {
+  primary: "text-blue-500",
+  secondary: "text-yellow-500",
+  error: "text-red-500",
+  neutrak: "text-gray-500",
+};
+</script>

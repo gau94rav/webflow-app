@@ -1,11 +1,11 @@
 <template>
   <div
-    class="sticky flex flex-col h-screen gap-2 transition border-r border-gray-300 w-max dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+    class="sticky flex flex-col h-screen gap-2 transition border-r border-gray-300 w-max dark:border-gray-600 dark:bg-gray-800"
   >
     <div v-if="global.sidebarVisible">
       <!-- Header -->
       <div
-        class="flex items-center justify-between gap-16 p-2 border-b border-gray-300 dark:border-gray-600"
+        class="flex items-center justify-between gap-16 p-2 border-b border-gray-300 dark:border-gray-600 dark:text-neutral-100"
       >
         <div class="whitespace-pre">Webflow App</div>
         <div class="flex items-center gap-2">
