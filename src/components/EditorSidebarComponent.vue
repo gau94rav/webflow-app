@@ -44,32 +44,32 @@
 </template>
 
 <script setup>
-import { Icon } from "@iconify/vue";
-import { useEditorStore } from "../stores/editor";
-import * as components from "../utils/components";
-import { computed } from "vue";
+import { Icon } from '@iconify/vue'
+import { useEditorStore } from '../stores/editor'
+import * as components from '../utils/components'
+import { computed } from 'vue'
 
-const editor = useEditorStore();
-const metadata = components[editor.selectedComponentEditing.name];
+const editor = useEditorStore()
+const metadata = components[editor.selectedComponentEditing.name]
 
 const propsData = computed(() => {
-  const props = metadata.props;
+  const props = metadata.props
   if (props) {
     return Object.keys(props).map((name) => {
-      const propObject = props[name];
+      const propObject = props[name]
       return {
         name,
         options: propObject.options || null,
         default: propObject.default,
-      };
-    });
+      }
+    })
   }
-  return [];
-});
+  return []
+})
 
 function updateProp({ name, value }) {
-  const component = editor.selectedComponentEditing;
-  const props = { ...component.props, [name]: value };
-  editor.setComponentProps(component.id, props);
+  const component = editor.selectedComponentEditing
+  const props = { ...component.props, [name]: value }
+  editor.setComponentProps(component.id, props)
 }
 </script>

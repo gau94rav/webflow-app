@@ -71,7 +71,6 @@ function handleDragLeave(index) {
     const withoutSelected = editor.componentTree.filter(
       (c) => c.id !== editor.selectedComponent.id
     )
-    console.log(withoutSelected)
     components = [...withoutSelected, editor.selectedComponent]
     editor.setComponentTree(components)
   }

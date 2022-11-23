@@ -12,7 +12,7 @@
       >
         <Icon
           :icon="editor.canBeDeleted ? 'mdi:trash' : 'mdi:close'"
-          class="absolute top-0 bottom-0 left-0 right-0 m-auto text-7xl"
+          class="absolute top-0 bottom-0 left-0 right-0 m-auto text-7xl z-0"
         />
       </div>
       <div
@@ -39,66 +39,63 @@
 </template>
 
 <script setup>
-import * as components from "../utils/components";
-import LibrarySidebarComponent from "../components/LibrarySidebarComponent.vue";
-import EditorComponent from "../components/EditorComponent.vue";
-import EditorSidebarComponent from "../components/EditorSidebarComponent.vue";
-import { Icon } from "@iconify/vue";
-import { useEditorStore } from "../stores/editor";
+import * as components from '../utils/components'
+import LibrarySidebarComponent from '../components/LibrarySidebarComponent.vue'
+import EditorComponent from '../components/EditorComponent.vue'
+import EditorSidebarComponent from '../components/EditorSidebarComponent.vue'
+import { Icon } from '@iconify/vue'
+import { useEditorStore } from '../stores/editor'
 
-const editor = useEditorStore();
+const editor = useEditorStore()
 
 function handleDragStart(e, name) {
   editor.setSelectedComponent({
     id: guidGenerator(),
     name,
     props: {},
-  });
+  })
 }
 
 function handleDragRemove(e) {
-  e.preventDefault();
+  e.preventDefault()
   if (editor.canBeDeleted) {
-    editor.removeFromComponentTree(editor.selectedComponent.id);
+    editor.removeFromComponentTree(editor.selectedComponent.id)
   }
 }
 
 function handleEditorDragover(e) {
-  e.preventDefault();
+  e.preventDefault()
   const alreadyAdded = editor.componentTree.filter(
     (component) => component.id === editor.selectedComponent.id
-  ).length;
+  ).length
   if (!alreadyAdded) {
-    editor.setComponentTree([
-      ...editor.componentTree,
-      editor.selectedComponent,
-    ]);
+    editor.setComponentTree([...editor.componentTree, editor.selectedComponent])
   }
-  editor.setIsDragging(true);
+  editor.setIsDragging(true)
 }
 
 function resetDragItem() {
-  editor.setSelectedComponent({});
-  editor.setIsDragging(false);
+  editor.setSelectedComponent({})
+  editor.setIsDragging(false)
 }
 
 function guidGenerator() {
   var S4 = function () {
-    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-  };
+    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+  }
   return (
     S4() +
     S4() +
-    "-" +
+    '-' +
     S4() +
-    "-" +
+    '-' +
     S4() +
-    "-" +
+    '-' +
     S4() +
-    "-" +
+    '-' +
     S4() +
     S4() +
     S4()
-  );
+  )
 }
 </script>
