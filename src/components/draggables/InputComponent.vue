@@ -7,28 +7,28 @@
 
 <script>
 export default {
-  name: "InputComponent",
+  name: 'InputComponent',
   inheritAttrs: false,
   customOptions: {},
-};
+}
 </script>
 <script setup>
 const props = defineProps({
   label: {
     type: String,
-    default: "My Input",
+    default: 'My Input',
   },
   color: {
     type: String,
-    default: "primary",
-    options: ["primary", "secondary", "error", "neutral"],
+    default: 'primary',
+    options: ['primary', 'secondary', 'error', 'neutral'],
   },
-});
+})
 
 const colors = {
-  primary: "text-blue-500",
-  secondary: "text-yellow-500",
-  error: "text-red-500",
-  neutrak: "text-gray-500",
-};
+  primary: 'text-blue-500',
+  secondary: 'text-yellow-500',
+  error: 'text-red-500',
+  neutral: 'text-gray-500',
+}
 </script>

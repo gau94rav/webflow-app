@@ -1,7 +1,9 @@
 <template>
-  <div class="w-full m-0 h-max">
+  <div
+    :class="Object.values(global.pageSettings).toString().replace(/,/gi, ' ')"
+  >
     <div
-      v-for="(component, index) in editor.componentTree"
+      v-for="(component, index) in global.componentTree"
       :key="component.id"
       :draggable="true"
       @mouseover="showEditIconIndex = index"
@@ -10,7 +12,7 @@
       @dragleave="handleDragLeave(index)"
       @dragstart="handleDragStart(component)"
       @drop="handleDrop"
-      class="relative cursor-move"
+      class="relative cursor-move dark:hover:outline-white hover:outline"
     >
       <component :is="components[component.name]" v-bind="component.props" />
       <div
@@ -26,10 +28,12 @@
 
 <script setup>
 import * as components from '../utils/components'
+import { useGlobalStore } from '../stores/global'
 import { Icon } from '@iconify/vue'
 import { useEditorStore } from '../stores/editor'
 import { ref } from 'vue'
 
+const global = useGlobalStore()
 const editor = useEditorStore()
 const showEditIconIndex = ref(false)
 
@@ -47,17 +51,17 @@ function handleDrop() {
 
 function handleDragOver(index) {
   // Components before hovered index
-  const beforeComponent = editor.componentTree
+  const beforeComponent = global.componentTree
     .slice(0, index)
     .filter((c) => c.id !== editor.selectedComponent.id)
 
   // Components after hovered index
-  const afterComponent = editor.componentTree
+  const afterComponent = global.componentTree
     .slice(index)
     .filter((c) => c.id !== editor.selectedComponent.id)
 
-  // Append selected component in between before and after
-  editor.setComponentTree([
+  // Append selected component in between, before and after
+  global.setComponentTree([
     ...beforeComponent,
     editor.selectedComponent,
     ...afterComponent,
@@ -65,14 +69,14 @@ function handleDragOver(index) {
 }
 
 function handleDragLeave(index) {
-  const lastIndex = editor.componentTree.length - 1
+  const lastIndex = global.componentTree.length - 1
   let components = []
   if (lastIndex === index) {
-    const withoutSelected = editor.componentTree.filter(
+    const withoutSelected = global.componentTree.filter(
       (c) => c.id !== editor.selectedComponent.id
     )
     components = [...withoutSelected, editor.selectedComponent]
-    editor.setComponentTree(components)
+    global.setComponentTree(components)
   }
 }
 </script>

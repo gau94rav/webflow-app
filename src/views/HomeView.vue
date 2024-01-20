@@ -12,7 +12,7 @@
       >
         <Icon
           :icon="editor.canBeDeleted ? 'mdi:trash' : 'mdi:close'"
-          class="absolute top-0 bottom-0 left-0 right-0 m-auto text-7xl z-0"
+          class="absolute top-0 bottom-0 left-0 right-0 z-0 m-auto text-7xl"
         />
       </div>
       <div
@@ -45,31 +45,54 @@ import EditorComponent from '../components/EditorComponent.vue'
 import EditorSidebarComponent from '../components/EditorSidebarComponent.vue'
 import { Icon } from '@iconify/vue'
 import { useEditorStore } from '../stores/editor'
+import { useGlobalStore } from '../stores/global'
 
 const editor = useEditorStore()
+const global = useGlobalStore()
 
 function handleDragStart(e, name) {
+  const propObject = components[name].props || {}
+  const props = {}
+  const propsMetadata = {}
+  for (let key in propObject) {
+    const current = propObject[key]
+    const value = current.default
+    let options = []
+    if (value) {
+      let type = 'text'
+      if (current.options) {
+        type = 'select'
+        options = current.options
+      } else if (typeof value == 'number') {
+        type = 'number'
+      }
+      propsMetadata[key] = { default: value, type, options }
+      props[key] = value
+    }
+  }
+
   editor.setSelectedComponent({
     id: guidGenerator(),
     name,
-    props: {},
+    props,
+    propsMetadata,
   })
 }
 
 function handleDragRemove(e) {
   e.preventDefault()
   if (editor.canBeDeleted) {
-    editor.removeFromComponentTree(editor.selectedComponent.id)
+    global.removeFromComponentTree(editor.selectedComponent.id)
   }
 }
 
 function handleEditorDragover(e) {
   e.preventDefault()
-  const alreadyAdded = editor.componentTree.filter(
+  const alreadyAdded = global.componentTree.filter(
     (component) => component.id === editor.selectedComponent.id
   ).length
   if (!alreadyAdded) {
-    editor.setComponentTree([...editor.componentTree, editor.selectedComponent])
+    global.setComponentTree([...global.componentTree, editor.selectedComponent])
   }
   editor.setIsDragging(true)
 }

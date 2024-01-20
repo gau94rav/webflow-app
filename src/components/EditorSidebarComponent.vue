@@ -13,31 +13,43 @@
       />
     </div>
     <div
-      v-for="item in propsData"
-      :key="item"
+      v-for="prop in propsData"
+      :key="prop.name"
       class="flex flex-col w-full gap-1 p-2"
     >
-      <label class="dark:text-neutral-100" :for="item.name">{{
-        item.name
+      <label class="dark:text-neutral-100" :for="prop.name">{{
+        prop.name
       }}</label>
       <select
-        :id="item.name"
-        :value="item.default"
-        v-if="item.options"
+        :id="prop.name"
+        :value="prop.value"
+        v-if="prop.type == 'select'"
         class="px-2 py-1 border rounded border-neutral-600"
-        @change="updateProp({ name: item.name, value: $event.target.value })"
+        @change="
+          updateProp({
+            name: prop.name,
+            value: $event.target.value,
+            type: prop.type,
+          })
+        "
       >
-        <option :value="option" v-for="option in item.options" :key="option">
+        <option :value="option" v-for="option in prop.options" :key="option">
           {{ option }}
         </option>
       </select>
       <input
-        :id="item.name"
+        :id="prop.name"
         v-else
-        type="text"
+        :type="prop.type"
         class="px-2 py-1 border rounded border-neutral-600"
-        :value="item.default"
-        @input="updateProp({ name: item.name, value: $event.target.value })"
+        :value="prop.value"
+        @input="
+          updateProp({
+            name: prop.name,
+            value: $event.target.value,
+            type: prop.type,
+          })
+        "
       />
     </div>
   </div>
@@ -46,30 +58,37 @@
 <script setup>
 import { Icon } from '@iconify/vue'
 import { useEditorStore } from '../stores/editor'
+import { useGlobalStore } from '../stores/global'
 import * as components from '../utils/components'
 import { computed } from 'vue'
 
 const editor = useEditorStore()
+const global = useGlobalStore()
 const metadata = components[editor.selectedComponentEditing.name]
 
 const propsData = computed(() => {
-  const props = metadata.props
-  if (props) {
-    return Object.keys(props).map((name) => {
-      const propObject = props[name]
-      return {
-        name,
-        options: propObject.options || null,
-        default: propObject.default,
-      }
+  const component = editor.selectedComponentEditing
+  const props = component.props
+  const metadata = component.propsMetadata
+  const data = []
+  for (let name in metadata) {
+    const prop = metadata[name]
+    data.push({
+      name,
+      value: props[name],
+      type: prop.type,
+      options: prop.options,
     })
   }
-  return []
+  return data
 })
 
-function updateProp({ name, value }) {
+function updateProp({ name, value, type }) {
+  if (type == 'number') {
+    value = parseFloat(value)
+  }
   const component = editor.selectedComponentEditing
   const props = { ...component.props, [name]: value }
-  editor.setComponentProps(component.id, props)
+  global.setComponentProps({ id: component.id, props })
 }
 </script>
